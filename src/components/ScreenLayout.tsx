@@ -1,6 +1,7 @@
 import styled from 'styled-components/native'
 import Spinner from 'src/components/Spinner'
 import useCacheAssets from 'src/hooks/useCacheAssets'
+import { Layout } from '@ui-kitten/components'
 
 interface Props {
   children: React.ReactNode
@@ -14,7 +15,8 @@ export default function ScreenLayout({ children, testID }: Props) {
 }
 
 const S = {
-  Wrapper: styled.View`
+  Wrapper: styled(Layout)`
     flex: 1;
+    background-color: ${(p) => p.theme.background};
   `
 }
