@@ -1,6 +1,7 @@
 import React from 'react'
 import { BottomNavigation, BottomNavigationTab } from '@ui-kitten/components'
 import { Slot, router } from 'expo-router'
+import { AwardIcon, ClockIcon, StarIcon } from '../Icons'
 
 export const AppNavigator = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0)
@@ -20,9 +21,9 @@ export const AppNavigator = () => {
           // Navigate to the selected screen (path)
           router.replace(MAP_SCREEN_URLS[index])
         }}>
-        <BottomNavigationTab title="USERS" />
-        <BottomNavigationTab title="ORDERS" />
-        <BottomNavigationTab title="TRANSACTIONS" />
+        <BottomNavigationTab title="Partidos" icon={ClockIcon} />
+        <BottomNavigationTab title="Torneos" icon={AwardIcon} />
+        <BottomNavigationTab title="Favoritos" icon={StarIcon} />
       </BottomNavigation>
     </>
   )
