@@ -1,6 +1,5 @@
 import 'expo-dev-client'
 import { ThemeProvider as NavProvider } from '@react-navigation/native'
-import { Slot } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import * as eva from '@eva-design/eva'
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components'
@@ -8,6 +7,7 @@ import styled, { ThemeProvider, type DefaultTheme } from 'styled-components/nati
 import { appTheme, navTheme } from 'src/config/theme'
 import { myTheme as evaTheme } from 'src/config/evaTheme'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
+import { AppNavigator } from 'src/components/Navigator'
 
 export default function AppLayout() {
   return (
@@ -17,7 +17,7 @@ export default function AppLayout() {
         <StatusBar style="light" />
         <S.AppWrapper>
           <NavProvider value={navTheme}>
-            <Slot screenOptions={{ headerShown: false }} />
+            <AppNavigator />
           </NavProvider>
         </S.AppWrapper>
       </ApplicationProvider>
