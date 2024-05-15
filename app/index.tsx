@@ -2,6 +2,7 @@ import styled from 'styled-components/native'
 import { Stack } from 'expo-router'
 import LinkButton from 'src/components/LinkButton'
 import ScreenLayout from 'src/components/ScreenLayout'
+import { Icon } from '@ui-kitten/components'
 
 export default function HomeScreen() {
   return (
@@ -9,7 +10,9 @@ export default function HomeScreen() {
       <S.Content testID="home-screen-content">
         <Stack.Screen options={{ title: 'Home Screen' }} />
 
-        <S.Title testID="home-screen-title">🏠</S.Title>
+        <S.Title testID="home-screen-title">
+          <Icon name="facebook" style={{ width: 24, height: 24, tintColor: 'black' }} />
+        </S.Title>
         <S.Text testID="home-screen-text">Go to app/index.tsx to edit</S.Text>
 
         <LinkButton href="/second" text="Go To Second Screen" />

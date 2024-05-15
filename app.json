@@ -23,9 +23,14 @@
     },
     "web": {
       "favicon": "./src/assets/images/app-icon.png",
-      "bundler": "metro"
+      "bundler": "metro",
+      "build": { "babel": { "include": ["@ui-kitten/components"] } }
     },
-    "plugins": ["expo-router"],
-    "extra": { "router": { "origin": false } }
+    "plugins": ["expo-router", "expo-font"],
+    "extra": {
+      "router": {
+        "origin": false
+      }
+    }
   }
 }
