@@ -7,7 +7,7 @@ export const myTheme = {
   'color-primary-200': '#A9C0F3',
   'color-primary-300': '#7895DD',
   'color-primary-400': '#506CBB',
-  'color-primary-500': '#223C8E',
+  'color-primary-500': '#FFF',
   'color-primary-600': '#182D7A',
   'color-primary-700': '#112166',
   'color-primary-800': '#0A1652',
