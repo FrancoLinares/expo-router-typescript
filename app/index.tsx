@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ScrollView, SafeAreaView, RefreshControl } from 'react-native'
 import { Stack } from 'expo-router'
-import LinkButton from 'src/components/LinkButton'
 import ScreenLayout from 'src/components/ScreenLayout'
 import { Spinner } from '@ui-kitten/components'
 import { Divider, List } from '@ui-kitten/components'
@@ -103,8 +102,6 @@ export default function HomeScreen() {
                     </CardStyled.Box>
                   </CardStyled.Container>
                 ))}
-
-              <LinkButton href="/second" text="Go To Second Screen" />
             </Styled.Content>
           </ScrollView>
         </SafeAreaView>
