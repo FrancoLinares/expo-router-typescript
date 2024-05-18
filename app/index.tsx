@@ -1,16 +1,15 @@
 import { useMemo, useState } from 'react'
 import { ScrollView, SafeAreaView, RefreshControl } from 'react-native'
 import { Stack } from 'expo-router'
-import ScreenLayout from 'src/components/ScreenLayout'
-import { Spinner } from '@ui-kitten/components'
-import { Divider, List } from '@ui-kitten/components'
-import { HOME_TITLE } from './constants'
 import { useQuery } from '@tanstack/react-query'
+import ScreenLayout from 'src/components/ScreenLayout'
+import { Spinner, Divider, List } from '@ui-kitten/components'
+import { Match } from 'src/types/match'
 import { supabase } from 'src/utils/supabase'
 import { useRefreshOnFocus } from 'src/hooks/useRefreshOnFocus'
 import { CardStyled, Styled } from './styled'
+import { HOME_TITLE } from './constants'
 import { Header, renderItem } from './helpers'
-import { Match } from 'src/types/match'
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false)
