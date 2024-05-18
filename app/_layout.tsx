@@ -8,18 +8,23 @@ import { appTheme, navTheme } from 'src/config/theme'
 import { myTheme as evaTheme } from 'src/config/evaTheme'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import { AppNavigator } from 'src/components/Navigator'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 export default function AppLayout() {
   return (
     <ThemeProvider theme={appTheme as DefaultTheme}>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={{ ...eva.dark, ...evaTheme }}>
-        <StatusBar style="light" />
-        <S.AppWrapper>
-          <NavProvider value={navTheme}>
-            <AppNavigator />
-          </NavProvider>
-        </S.AppWrapper>
+        <QueryClientProvider client={queryClient}>
+          <StatusBar style="light" />
+          <S.AppWrapper>
+            <NavProvider value={navTheme}>
+              <AppNavigator />
+            </NavProvider>
+          </S.AppWrapper>
+        </QueryClientProvider>
       </ApplicationProvider>
     </ThemeProvider>
   )

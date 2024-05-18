@@ -1,44 +1,114 @@
-import styled from 'styled-components/native'
+import { useMemo, useState } from 'react'
+import { ScrollView, SafeAreaView, RefreshControl } from 'react-native'
 import { Stack } from 'expo-router'
 import LinkButton from 'src/components/LinkButton'
 import ScreenLayout from 'src/components/ScreenLayout'
-import { Icon } from '@ui-kitten/components'
+import { Spinner } from '@ui-kitten/components'
+import { Divider, List } from '@ui-kitten/components'
+import { HOME_TITLE } from './constants'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from 'src/utils/supabase'
+import { useRefreshOnFocus } from 'src/hooks/useRefreshOnFocus'
+import { CardStyled, Styled } from './styled'
+import { Header, renderItem } from './helpers'
+import { Match } from 'src/types/match'
 
 export default function HomeScreen() {
-  return (
-    <ScreenLayout testID="home-screen-layout">
-      <S.Content testID="home-screen-content">
-        <Stack.Screen options={{ title: 'Home Screen' }} />
+  const [refreshing, setRefreshing] = useState(false)
 
-        <S.Title testID="home-screen-title">
-          <Icon name="facebook" style={{ width: 24, height: 24, tintColor: 'black' }} />
-        </S.Title>
-        <S.Text testID="home-screen-text">Go to app/index.tsx to edit</S.Text>
+  const {
+    data: matches,
+    isPending: isPendingMatches,
+    refetch
+  } = useQuery({
+    queryKey: ['matches'],
+    queryFn: async () => {
+      const { data: liveScore, error } = await supabase.from('matches').select('*')
 
-        <LinkButton href="/second" text="Go To Second Screen" />
-      </S.Content>
-    </ScreenLayout>
+      if (error) throw error
+
+      // Separate matches by circuit
+      const matchesByCircuit: Record<string, Match[]> = liveScore.reduce((circuits, match) => {
+        if (!circuits[match.circuit]) {
+          circuits[match.circuit] = []
+        }
+
+        circuits[match.circuit].push(match)
+        return circuits
+      }, {})
+
+      return matchesByCircuit
+    }
+  })
+
+  const { data: circuits, isPending: isPendingCircuits } = useQuery({
+    queryKey: ['circuits'],
+    queryFn: async () => {
+      const { data: circuits, error } = await supabase.from('circuit').select('*')
+
+      if (error) throw error
+
+      return circuits
+    },
+    staleTime: 10 * (60 * 1000) // 10 mins
+  })
+  const circuitsMap = useMemo(
+    () =>
+      circuits?.reduce((map, circuit) => {
+        map[circuit.id] = circuit
+
+        return map
+      }, {}),
+    [circuits]
   )
-}
 
-const S = {
-  Content: styled.View`
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-  `,
-  Title: styled.Text`
-    color: ${(p) => p.theme.primary};
-    font-family: helvetica;
-    font-weight: 900;
-    font-size: ${(p) => p.theme.size(200, 'px')};
-    margin-bottom: ${(p) => p.theme.size(10, 'px')};
-  `,
-  Text: styled.Text`
-    color: ${(p) => p.theme.primary};
-    font-family: helvetica;
-    font-weight: 700;
-    font-size: ${(p) => p.theme.size(15, 'px')};
-    margin-bottom: ${(p) => p.theme.size(15, 'px')};
-  `
+  useRefreshOnFocus(refetch)
+
+  const onRefresh = async () => {
+    setRefreshing(true)
+    await refetch()
+    setRefreshing(false)
+  }
+
+  if (isPendingMatches || isPendingCircuits)
+    return (
+      <Styled.Layout style={{ flex: 1 }} testID="home-screen-layout">
+        <Spinner status="basic" />
+      </Styled.Layout>
+    )
+
+  return (
+    (!isPendingMatches || !isPendingCircuits) && (
+      <ScreenLayout testID="home-screen-layout">
+        <SafeAreaView>
+          <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <Styled.Content testID="home-screen-content">
+              <Stack.Screen options={{ title: 'Home Screen' }} />
+
+              <Styled.Title testID="home-screen-title" category="h1">
+                {HOME_TITLE}
+              </Styled.Title>
+
+              {matches &&
+                Object.entries(matches).map(([circuitId, match]) => (
+                  <CardStyled.Container key={circuitId}>
+                    <CardStyled.Box status="primary" header={Header(circuitId, circuitsMap)}>
+                      <List
+                        scrollEnabled={false}
+                        data={match}
+                        ItemSeparatorComponent={Divider}
+                        renderItem={renderItem}
+                        style={{ backgroundColor: 'transparent' }}
+                      />
+                    </CardStyled.Box>
+                  </CardStyled.Container>
+                ))}
+
+              <LinkButton href="/second" text="Go To Second Screen" />
+            </Styled.Content>
+          </ScrollView>
+        </SafeAreaView>
+      </ScreenLayout>
+    )
+  )
 }
