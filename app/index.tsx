@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ScrollView, SafeAreaView, RefreshControl } from 'react-native'
+import { ScrollView, SafeAreaView, RefreshControl, View } from 'react-native'
 import { Stack } from 'expo-router'
 import { useQuery } from '@tanstack/react-query'
 import ScreenLayout from 'src/components/ScreenLayout'
@@ -8,8 +8,9 @@ import { Match } from 'src/types/match'
 import { supabase } from 'src/utils/supabase'
 import { useRefreshOnFocus } from 'src/hooks/useRefreshOnFocus'
 import { CardStyled, Styled } from './styled'
-import { HOME_TITLE } from './constants'
+import { HOME_FINISHED_TITLE, HOME_NO_MATCHES, HOME_TITLE, HOME_UNFINISHED_TITLE } from './constants'
 import { Header, renderItem } from './helpers'
+import { supabaseFormatDate } from 'src/utils/shared'
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false)
@@ -39,6 +40,39 @@ export default function HomeScreen() {
     }
   })
 
+  const {
+    data: matchesHistory,
+    isPending: isPendingMatchesHistory,
+    refetch: refetchHistory
+  } = useQuery({
+    queryKey: ['matchesHistory'],
+    queryFn: async () => {
+      const todayStart = new Date(new Date().setHours(0, 0, 0, 0))
+      const todayEnd = new Date(new Date().setHours(23, 59, 59, 999))
+
+      const { data: scoreHistory, error } = await supabase
+        .from('score_history')
+        .select('*')
+        .gte('created_at', supabaseFormatDate(todayStart))
+        .lte('created_at', supabaseFormatDate(todayEnd))
+
+      if (error) throw error
+
+      // Separate matches by circuit
+      const matchesByCircuit: Record<string, Match[]> = scoreHistory.reduce((circuits, match) => {
+        if (!circuits[match.circuit]) {
+          circuits[match.circuit] = []
+        }
+
+        circuits[match.circuit].push(match)
+        return circuits
+      }, {})
+
+      return matchesByCircuit
+    },
+    staleTime: 5 * (60 * 1000) // 5 mins
+  })
+
   const { data: circuits, isPending: isPendingCircuits } = useQuery({
     queryKey: ['circuits'],
     queryFn: async () => {
@@ -48,7 +82,7 @@ export default function HomeScreen() {
 
       return circuits
     },
-    staleTime: 10 * (60 * 1000) // 10 mins
+    staleTime: 15 * (60 * 1000) // 10 mins
   })
   const circuitsMap = useMemo(
     () =>
@@ -65,6 +99,7 @@ export default function HomeScreen() {
   const onRefresh = async () => {
     setRefreshing(true)
     await refetch()
+    await refetchHistory()
     setRefreshing(false)
   }
 
@@ -76,10 +111,10 @@ export default function HomeScreen() {
     )
 
   return (
-    (!isPendingMatches || !isPendingCircuits) && (
+    !isPendingCircuits && (
       <ScreenLayout testID="home-screen-layout">
         <SafeAreaView>
-          <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+          <ScrollView style={{ marginBottom: 10 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Styled.Content testID="home-screen-content">
               <Stack.Screen options={{ title: 'Home Screen' }} />
 
@@ -87,20 +122,49 @@ export default function HomeScreen() {
                 {HOME_TITLE}
               </Styled.Title>
 
-              {matches &&
-                Object.entries(matches).map(([circuitId, match]) => (
-                  <CardStyled.Container key={circuitId}>
-                    <CardStyled.Box status="primary" header={Header(circuitId, circuitsMap)}>
-                      <List
-                        scrollEnabled={false}
-                        data={match}
-                        ItemSeparatorComponent={Divider}
-                        renderItem={renderItem}
-                        style={{ backgroundColor: 'transparent' }}
-                      />
-                    </CardStyled.Box>
-                  </CardStyled.Container>
-                ))}
+              <View>
+                <Styled.Title testID="home-screen-title" category="h2">
+                  {HOME_UNFINISHED_TITLE}
+                </Styled.Title>
+                {!isPendingMatches &&
+                  matches &&
+                  Object.entries(matches).map(([circuitId, match]) => (
+                    <CardStyled.Container key={circuitId}>
+                      <CardStyled.Box status="primary" header={Header(circuitId, circuitsMap)}>
+                        <List
+                          scrollEnabled={false}
+                          data={match}
+                          ItemSeparatorComponent={Divider}
+                          renderItem={renderItem}
+                          style={{ backgroundColor: 'transparent' }}
+                        />
+                      </CardStyled.Box>
+                    </CardStyled.Container>
+                  ))}
+                {!Object.keys(matches || {})?.length && <Styled.Text category="s1">{HOME_NO_MATCHES}</Styled.Text>}
+              </View>
+
+              <View>
+                <Styled.Title testID="home-screen-title" category="h2">
+                  {HOME_FINISHED_TITLE}
+                </Styled.Title>
+                {!isPendingMatchesHistory &&
+                  matchesHistory &&
+                  Object.entries(matchesHistory).map(([circuitId, match]) => (
+                    <CardStyled.Container key={circuitId}>
+                      <CardStyled.Box status="primary" header={Header(circuitId, circuitsMap)}>
+                        <List
+                          scrollEnabled={false}
+                          data={match}
+                          ItemSeparatorComponent={Divider}
+                          renderItem={renderItem}
+                          style={{ backgroundColor: 'transparent' }}
+                        />
+                      </CardStyled.Box>
+                    </CardStyled.Container>
+                  ))}
+                {!Object.keys(matchesHistory || {})?.length && <Styled.Text category="s1">{HOME_NO_MATCHES}</Styled.Text>}
+              </View>
             </Styled.Content>
           </ScrollView>
         </SafeAreaView>

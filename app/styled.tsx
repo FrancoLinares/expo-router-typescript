@@ -31,13 +31,16 @@ export const Styled = {
   `,
   Title: styled(Text)`
     color: ${(p) => p.theme.primary};
-    margin-top: ${(p) => p.theme.size(80, 'px')};
+    margin-top: ${(p) => p.theme.size(30, 'px')};
   `,
   Layout: styled(Layout)`
     flex-direction: row,
     justify-content: center;
     flex-wrap: wrap,
     align-items: center;
+  `,
+  Text: styled(Text)`
+    color: ${(p) => p.theme.primary};
   `
 }
 
@@ -46,6 +49,7 @@ export const CardStyled = {
     width: 90%;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-bottom: ${(p) => p.theme.size(10, 'px')};
   `,
   Box: styled(Card)`
     margin-top: ${(p) => p.theme.size(20, 'px')};
