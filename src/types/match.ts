@@ -7,5 +7,7 @@ export interface Match {
   set1T2: number
   set2T2: number
   set3T2: number
+  winner: string
+  serving: string
   currentGame: string
 }

@@ -11,7 +11,8 @@ export const appTheme = {
   highlight: '#FF2353',
   size: dimensions,
   windowHeight: `${height}px`,
-  windowWidth: `${width}px`
+  windowWidth: `${width}px`,
+  winner: '#16944b'
 }
 
 /**
@@ -26,6 +27,7 @@ export const navTheme = {
     card: appTheme.background,
     notification: appTheme.highlight,
     primary: appTheme.primary,
-    text: appTheme.primary
+    text: appTheme.primary,
+    winner: appTheme.winner
   }
 }

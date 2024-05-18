@@ -1,13 +1,15 @@
 // Image
-import { Image } from 'react-native'
+import { Image, Platform } from 'react-native'
 import A1Logo from '../src/assets/images/circuit/A1-logo.png'
 import PremierLogo from '../src/assets/images/circuit/premier-logo.webp'
+import ServingImg from '../src/assets/images/serving.png'
 import { Avatar } from '@ui-kitten/components'
 import { CardStyled, ListStyled } from './styled'
 import { Match } from 'src/types/match'
 
-const A1_LOGO = Image.resolveAssetSource(A1Logo).uri
-const PREMIER_LOGO = Image.resolveAssetSource(PremierLogo).uri
+const A1_LOGO = Platform.OS === 'web' ? A1Logo : Image.resolveAssetSource(A1Logo).uri
+const PREMIER_LOGO = Platform.OS === 'web' ? PremierLogo : Image.resolveAssetSource(PremierLogo).uri
+const SERVING_IMG = Platform.OS === 'web' ? ServingImg : Image.resolveAssetSource(ServingImg).uri
 
 const circuitsLogos: Record<string, string> = {
   '634b1b8e-3a25-4530-86c2-80b553ad9d45': A1_LOGO,
@@ -28,14 +30,19 @@ export const renderItem = ({ item }: { item: Match; index: number }): React.Reac
 
   return (
     <>
-      <ListStyled.Container>
-        <ListStyled.Player>
-          {playersTeam1.map((player) => (
-            <ListStyled.Text key={player} category="s1">
-              {player}
-            </ListStyled.Text>
-          ))}
-        </ListStyled.Player>
+      <ListStyled.Container transparency={!!item.winner && item.winner !== item.team1}>
+        <ListStyled.PlayerContainer>
+          <ListStyled.Player>
+            {playersTeam1.map((player) => (
+              <ListStyled.Text key={player} category="s1">
+                {player}
+              </ListStyled.Text>
+            ))}
+          </ListStyled.Player>
+          <ListStyled.Serving>
+            {item.serving === item.team1 && <ListStyled.ServingImg source={{ uri: SERVING_IMG }} shape="round" />}
+          </ListStyled.Serving>
+        </ListStyled.PlayerContainer>
         <ListStyled.Sets style={{ flex: 1, marginRight: 30 }}>
           <ListStyled.Text category="h6">{currentGame[0]}</ListStyled.Text>
         </ListStyled.Sets>
@@ -45,14 +52,19 @@ export const renderItem = ({ item }: { item: Match; index: number }): React.Reac
           <ListStyled.Text category="s1">{item.set3T1}</ListStyled.Text>
         </ListStyled.Sets>
       </ListStyled.Container>
-      <ListStyled.Container>
-        <ListStyled.Player>
-          {playersTeam2.map((player) => (
-            <ListStyled.Text key={player} category="s1">
-              {player}
-            </ListStyled.Text>
-          ))}
-        </ListStyled.Player>
+      <ListStyled.Container transparency={!!item.winner && item.winner !== item.team2}>
+        <ListStyled.PlayerContainer>
+          <ListStyled.Player>
+            {playersTeam2.map((player) => (
+              <ListStyled.Text key={player} category="s1">
+                {player}
+              </ListStyled.Text>
+            ))}
+          </ListStyled.Player>
+          <ListStyled.Serving>
+            {item.serving === item.team2 && <ListStyled.ServingImg source={{ uri: SERVING_IMG }} shape="round" />}
+          </ListStyled.Serving>
+        </ListStyled.PlayerContainer>
         <ListStyled.Sets style={{ flex: 1, marginRight: 30 }}>
           <ListStyled.Text category="h6">{currentGame[1]}</ListStyled.Text>
         </ListStyled.Sets>
