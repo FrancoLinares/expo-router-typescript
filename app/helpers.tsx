@@ -3,9 +3,11 @@ import { Image, Platform } from 'react-native'
 import A1Logo from '../src/assets/images/circuit/A1-logo.png'
 import PremierLogo from '../src/assets/images/circuit/premier-logo.webp'
 import ServingImg from '../src/assets/images/serving.png'
-import { Avatar } from '@ui-kitten/components'
+import { Avatar, Text } from '@ui-kitten/components'
 import { CardStyled, ListStyled } from './styled'
 import { Match } from 'src/types/match'
+import { CircuitMap } from 'src/types/circuit'
+import { isMatch } from 'src/components/Home/utils'
 
 const A1_LOGO = Platform.OS === 'web' ? A1Logo : Image.resolveAssetSource(A1Logo).uri
 const PREMIER_LOGO = Platform.OS === 'web' ? PremierLogo : Image.resolveAssetSource(PremierLogo).uri
@@ -16,14 +18,22 @@ const circuitsLogos: Record<string, string> = {
   'aeda0ba9-3155-40af-a0bb-3b3a7491a06b': PREMIER_LOGO
 }
 
-export const Header = (circuitId: string, circuitsMap: Record<string, { name: string }>) => (
-  <CardStyled.Header>
-    <Avatar source={{ uri: circuitsLogos[circuitId] }} shape="round" />
-    <CardStyled.HeaderText category="h6">{circuitsMap[circuitId].name}</CardStyled.HeaderText>
-  </CardStyled.Header>
-)
+export const Header = (circuitId: string, circuitsMap: CircuitMap | undefined) => {
+  const circuitLogoUri = circuitsLogos[circuitId]
+  const circuitName = circuitsMap?.[circuitId]?.name
+
+  return (
+    <CardStyled.Header>
+      {circuitLogoUri && <Avatar source={{ uri: circuitLogoUri }} shape="round" />}
+      {circuitName && <CardStyled.HeaderText category="h6">{circuitName}</CardStyled.HeaderText>}
+    </CardStyled.Header>
+  )
+}
 
 export const renderItem = ({ item }: { item: Match; index: number }): React.ReactElement => {
+  // Non-null properties type guard
+  if (!isMatch(item)) return <Text>-</Text>
+
   const currentGame = item.currentGame.split('//')
   const playersTeam1 = item.team1.split('//')
   const playersTeam2 = item.team2.split('//')
