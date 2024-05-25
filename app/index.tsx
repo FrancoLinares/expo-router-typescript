@@ -1,19 +1,32 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ScrollView, SafeAreaView, RefreshControl, View } from 'react-native'
 import { Stack } from 'expo-router'
 import { useQuery } from '@tanstack/react-query'
 import ScreenLayout from 'src/components/ScreenLayout'
-import { Spinner, Divider, List } from '@ui-kitten/components'
+import { Spinner, Divider, List, Calendar } from '@ui-kitten/components'
 import { Match } from 'src/types/match'
 import { supabase } from 'src/utils/supabase'
 import { useRefreshOnFocus } from 'src/hooks/useRefreshOnFocus'
 import { CardStyled, Styled } from './styled'
 import { HOME_FINISHED_TITLE, HOME_NO_MATCHES, HOME_TITLE, HOME_UNFINISHED_TITLE } from './constants'
 import { Header, renderItem } from './helpers'
-import { supabaseFormatDate } from 'src/utils/shared'
+import { formatDate, supabaseFormatDate } from 'src/utils/shared'
+import { CalendarIcon } from 'src/components/Icons'
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false)
+  const [date, setDate] = useState(new Date())
+  const [showCurrentMatches, setShowCurrentMatches] = useState(true)
+  const [showCalendar, setShowCalendar] = useState(false)
+
+  useEffect(() => {
+    onRefresh()
+    // Show current matches only if the date is today
+    setShowCurrentMatches(formatDate(date) === formatDate(new Date()))
+
+    console.log('date', date)
+    console.log('datetoday', new Date())
+  }, [date])
 
   const {
     data: matches,
@@ -47,8 +60,11 @@ export default function HomeScreen() {
   } = useQuery({
     queryKey: ['matchesHistory'],
     queryFn: async () => {
-      const todayStart = new Date(new Date().setHours(0, 0, 0, 0))
-      const todayEnd = new Date(new Date().setHours(23, 59, 59, 999))
+      const todayStart = new Date(date.setHours(0, 0, 0, 0))
+      console.log('🚀 ~ queryFn: ~ date:', date)
+      console.log('🚀 ~ queryFn: ~ todayStart:', todayStart)
+      const todayEnd = new Date(date.setHours(23, 59, 59, 999))
+      console.log('🚀 ~ queryFn: ~ todayEnd:', todayEnd)
 
       const { data: scoreHistory, error } = await supabase
         .from('score_history')
@@ -118,31 +134,44 @@ export default function HomeScreen() {
             <Styled.Content testID="home-screen-content">
               <Stack.Screen options={{ title: 'Home Screen' }} />
 
-              <Styled.Title testID="home-screen-title" category="h1">
-                {HOME_TITLE}
+              <Styled.Title testID="home-screen-title" category="h1" style={{ marginTop: 80 }}>
+                {HOME_TITLE} - {formatDate(date)}
               </Styled.Title>
 
-              <View>
-                <Styled.Title testID="home-screen-title" category="h2">
-                  {HOME_UNFINISHED_TITLE}
-                </Styled.Title>
-                {!isPendingMatches &&
-                  matches &&
-                  Object.entries(matches).map(([circuitId, match]) => (
-                    <CardStyled.Container key={circuitId}>
-                      <CardStyled.Box status="primary" header={Header(circuitId, circuitsMap)}>
-                        <List
-                          scrollEnabled={false}
-                          data={match}
-                          ItemSeparatorComponent={Divider}
-                          renderItem={renderItem}
-                          style={{ backgroundColor: 'transparent' }}
-                        />
-                      </CardStyled.Box>
-                    </CardStyled.Container>
-                  ))}
-                {!Object.keys(matches || {})?.length && <Styled.Text category="s1">{HOME_NO_MATCHES}</Styled.Text>}
-              </View>
+              <Styled.Button onPress={() => setShowCalendar(!showCalendar)} accessoryLeft={CalendarIcon} />
+              {showCalendar && (
+                <Calendar
+                  date={date}
+                  onSelect={(nextDate) => {
+                    setShowCalendar(!showCalendar)
+                    setDate(nextDate)
+                  }}
+                />
+              )}
+
+              {showCurrentMatches && (
+                <View>
+                  <Styled.Title testID="home-screen-title" category="h2">
+                    {HOME_UNFINISHED_TITLE}
+                  </Styled.Title>
+                  {!isPendingMatches &&
+                    matches &&
+                    Object.entries(matches).map(([circuitId, match]) => (
+                      <CardStyled.Container key={circuitId}>
+                        <CardStyled.Box status="primary" header={Header(circuitId, circuitsMap)}>
+                          <List
+                            scrollEnabled={false}
+                            data={match}
+                            ItemSeparatorComponent={Divider}
+                            renderItem={renderItem}
+                            style={{ backgroundColor: 'transparent' }}
+                          />
+                        </CardStyled.Box>
+                      </CardStyled.Container>
+                    ))}
+                  {!Object.keys(matches || {})?.length && <Styled.Text category="s1">{HOME_NO_MATCHES}</Styled.Text>}
+                </View>
+              )}
 
               <View>
                 <Styled.Title testID="home-screen-title" category="h2">

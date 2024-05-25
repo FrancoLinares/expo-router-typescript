@@ -1,4 +1,4 @@
-import { Avatar, Card, Layout, Text } from '@ui-kitten/components'
+import { Avatar, Button, Card, Layout, Text } from '@ui-kitten/components'
 import styled from 'styled-components/native'
 
 export const ListStyled = {
@@ -54,6 +54,9 @@ export const Styled = {
   `,
   Text: styled(Text)`
     color: ${(p) => p.theme.primary};
+  `,
+  Button: styled(Button)`
+    background-color: 'transparent';
   `
 }
 
