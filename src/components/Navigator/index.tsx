@@ -9,7 +9,7 @@ export const AppNavigator = () => {
   // Every screen needs a path
   // All the paths are organized in an array
   // The path is used to navigate to the screen
-  const MAP_SCREEN_URLS = ['/', '/second']
+  const MAP_SCREEN_URLS = ['/', '/circuits']
 
   return (
     <>
