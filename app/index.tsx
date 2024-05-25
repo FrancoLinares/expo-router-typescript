@@ -8,7 +8,7 @@ import { Match } from 'src/types/match'
 import { supabase } from 'src/utils/supabase'
 import { useRefreshOnFocus } from 'src/hooks/useRefreshOnFocus'
 import { CardStyled, Styled } from './styled'
-import { HOME_FINISHED_TITLE, HOME_NO_MATCHES, HOME_TITLE, HOME_UNFINISHED_TITLE } from './constants'
+import { DAY_MILLISECONDS, HOME_FINISHED_TITLE, HOME_NO_MATCHES, HOME_TITLE, HOME_UNFINISHED_TITLE } from './constants'
 import { Header, renderItem } from './helpers'
 import { formatDate, supabaseFormatDate } from 'src/utils/shared'
 import { CalendarIcon } from 'src/components/Icons'
@@ -21,11 +21,17 @@ export default function HomeScreen() {
 
   useEffect(() => {
     onRefresh()
-    // Show current matches only if the date is today
-    setShowCurrentMatches(formatDate(date) === formatDate(new Date()))
 
-    console.log('date', date)
-    console.log('datetoday', new Date())
+    // Add a day to the date - this is needed for the calendar
+    const dateToVerify = new Date(date.getTime() + DAY_MILLISECONDS)
+    const todayDate = new Date()
+
+    if (formatDate(dateToVerify) > formatDate(todayDate)) {
+      dateToVerify.setDate(dateToVerify.getDate() - 1)
+    }
+
+    // Show current matches only if the date is today
+    setShowCurrentMatches(formatDate(dateToVerify) === formatDate(todayDate))
   }, [date])
 
   const {
@@ -61,10 +67,7 @@ export default function HomeScreen() {
     queryKey: ['matchesHistory'],
     queryFn: async () => {
       const todayStart = new Date(date.setHours(0, 0, 0, 0))
-      console.log('🚀 ~ queryFn: ~ date:', date)
-      console.log('🚀 ~ queryFn: ~ todayStart:', todayStart)
       const todayEnd = new Date(date.setHours(23, 59, 59, 999))
-      console.log('🚀 ~ queryFn: ~ todayEnd:', todayEnd)
 
       const { data: scoreHistory, error } = await supabase
         .from('score_history')
