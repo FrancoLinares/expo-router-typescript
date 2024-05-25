@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Layout, Text } from '@ui-kitten/components'
+import { Avatar, Card, Text } from '@ui-kitten/components'
 import styled from 'styled-components/native'
 
 export const ListStyled = {
@@ -35,28 +35,6 @@ export const ListStyled = {
   ServingImg: styled(Avatar)`
     height: ${(p) => p.theme.size(10, 'px')};
     width: ${(p) => p.theme.size(10, 'px')};
-  `
-}
-
-export const Styled = {
-  Content: styled.View`
-    align-items: center;
-  `,
-  Title: styled(Text)`
-    color: ${(p) => p.theme.primary};
-    margin-top: ${(p) => p.theme.size(30, 'px')};
-  `,
-  Layout: styled(Layout)`
-    flex-direction: row,
-    justify-content: center;
-    flex-wrap: wrap,
-    align-items: center;
-  `,
-  Text: styled(Text)`
-    color: ${(p) => p.theme.primary};
-  `,
-  Button: styled(Button)`
-    background-color: 'transparent';
   `
 }
 

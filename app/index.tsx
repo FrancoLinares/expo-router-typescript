@@ -4,7 +4,6 @@ import { Stack } from 'expo-router'
 import ScreenLayout from 'src/components/ScreenLayout'
 import { Spinner } from '@ui-kitten/components'
 import { useRefreshOnFocus } from 'src/hooks/useRefreshOnFocus'
-import { Styled } from '../src/components/Home/styled'
 import { DAY_MILLISECONDS, HOME_TITLE } from '../src/components/Home/constants'
 import { formatDate } from 'src/utils/shared'
 import useMatches from 'src/hooks/useMatches'
@@ -13,6 +12,7 @@ import useCircuits from 'src/hooks/useCircuits'
 import CurrentMatches from 'src/components/Home/CurrentMatches'
 import HistoryMatches from 'src/components/Home/HistoryMatches'
 import HomeCalendar from 'src/components/Home/Calendar'
+import { Styled } from 'src/components/styled'
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false)

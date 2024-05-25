@@ -5,7 +5,8 @@ import { CircuitMap } from 'src/types/circuit'
 import { MatchesMap } from 'src/types/match'
 import { Header, renderItem } from './helpers'
 import { HOME_NO_MATCHES, HOME_UNFINISHED_TITLE } from './constants'
-import { CardStyled, Styled } from './styled'
+import { CardStyled } from './styled'
+import { Styled } from '../styled'
 
 type Props = {
   isPendingMatches: boolean

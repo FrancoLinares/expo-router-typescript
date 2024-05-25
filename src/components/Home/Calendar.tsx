@@ -1,7 +1,7 @@
 import React from 'react'
 import { Calendar } from '@ui-kitten/components'
 import { CalendarIcon } from '../Icons'
-import { Styled } from './styled'
+import { Styled } from '../styled'
 
 type Props = {
   date: Date
