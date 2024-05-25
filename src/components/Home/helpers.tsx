@@ -1,13 +1,13 @@
 // Image
 import { Image, Platform } from 'react-native'
-import A1Logo from '../src/assets/images/circuit/A1-logo.png'
-import PremierLogo from '../src/assets/images/circuit/premier-logo.webp'
-import ServingImg from '../src/assets/images/serving.png'
+import A1Logo from '../../assets/images/circuit/A1-logo.png'
+import PremierLogo from '../../assets/images/circuit/premier-logo.webp'
+import ServingImg from '../../assets/images/serving.png'
 import { Avatar, Text } from '@ui-kitten/components'
-import { CardStyled, ListStyled } from './styled'
 import { Match } from 'src/types/match'
 import { CircuitMap } from 'src/types/circuit'
 import { isMatch } from 'src/components/Home/utils'
+import { CardStyled, ListStyled } from './styled'
 
 const A1_LOGO = Platform.OS === 'web' ? A1Logo : Image.resolveAssetSource(A1Logo).uri
 const PREMIER_LOGO = Platform.OS === 'web' ? PremierLogo : Image.resolveAssetSource(PremierLogo).uri

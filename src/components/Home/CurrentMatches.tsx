@@ -1,11 +1,11 @@
 import { Divider, List } from '@ui-kitten/components'
-import { HOME_NO_MATCHES, HOME_UNFINISHED_TITLE } from 'app/constants'
-import { Header, renderItem } from 'app/helpers'
-import { CardStyled, Styled } from 'app/styled'
 import React from 'react'
 import { View } from 'react-native'
 import { CircuitMap } from 'src/types/circuit'
 import { MatchesMap } from 'src/types/match'
+import { Header, renderItem } from './helpers'
+import { HOME_NO_MATCHES, HOME_UNFINISHED_TITLE } from './constants'
+import { CardStyled, Styled } from './styled'
 
 type Props = {
   isPendingMatches: boolean
