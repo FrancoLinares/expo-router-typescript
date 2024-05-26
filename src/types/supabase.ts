@@ -192,6 +192,47 @@ export type Database = {
           },
         ]
       }
+      tournaments: {
+        Row: {
+          circuit: string
+          created_at: string
+          end_date: string
+          id: number
+          name: string
+          place: string
+          start_date: string
+          type: string | null
+        }
+        Insert: {
+          circuit: string
+          created_at?: string
+          end_date: string
+          id?: number
+          name: string
+          place: string
+          start_date: string
+          type?: string | null
+        }
+        Update: {
+          circuit?: string
+          created_at?: string
+          end_date?: string
+          id?: number
+          name?: string
+          place?: string
+          start_date?: string
+          type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournaments_circuit_fkey"
+            columns: ["circuit"]
+            isOneToOne: false
+            referencedRelation: "circuit"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
