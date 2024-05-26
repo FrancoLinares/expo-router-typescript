@@ -8,3 +8,18 @@ export const formatDate = (date: Date) => {
 
   return `${artTimeSplitted[2]}-${artTimeSplitted[0]}-${artTimeSplitted[1]}`
 }
+
+export const MONTH_LIST = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Diciembre'
+]
