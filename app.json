@@ -10,7 +10,9 @@
       "image": "./src/assets/images/splash.png",
       "backgroundColor": "#222"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false
     },
@@ -24,13 +26,24 @@
     "web": {
       "favicon": "./src/assets/images/app-icon.png",
       "bundler": "metro",
-      "build": { "babel": { "include": ["@ui-kitten/components"] } }
+      "build": {
+        "babel": {
+          "include": [
+            "@ui-kitten/components"
+          ]
+        }
+      }
     },
-    "plugins": ["expo-router", "expo-font"],
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
     "extra": {
       "router": {
         "origin": false
       }
-    }
-  }
+    },
+    "sdkVersion": "51.0.0"
+  },
+  "name": "padel-app"
 }
