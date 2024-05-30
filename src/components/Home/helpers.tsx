@@ -13,7 +13,7 @@ const A1_LOGO = Platform.OS === 'web' ? A1Logo : Image.resolveAssetSource(A1Logo
 const PREMIER_LOGO = Platform.OS === 'web' ? PremierLogo : Image.resolveAssetSource(PremierLogo).uri
 const SERVING_IMG = Platform.OS === 'web' ? ServingImg : Image.resolveAssetSource(ServingImg).uri
 
-const circuitsLogos: Record<string, string> = {
+export const circuitsLogos: Record<string, string> = {
   '634b1b8e-3a25-4530-86c2-80b553ad9d45': A1_LOGO,
   'aeda0ba9-3155-40af-a0bb-3b3a7491a06b': PREMIER_LOGO
 }

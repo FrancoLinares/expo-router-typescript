@@ -5,8 +5,11 @@ import ScreenLayout from 'src/components/ScreenLayout'
 import { Styled } from 'src/components/styled'
 import { CIRCUITS_TITLE } from './constants'
 import Tournament from './Tournament'
+import useTournaments from 'src/hooks/useTournaments'
 
 export default function Torunaments() {
+  const { tournamentsByMonth = {} } = useTournaments()
+
   const currentYear = new Date().getFullYear()
 
   return (
@@ -19,7 +22,7 @@ export default function Torunaments() {
             <Styled.Title testID="circuits-screen-title" category="h1" style={{ marginTop: 50, marginBottom: 30 }}>
               {CIRCUITS_TITLE} {currentYear}
             </Styled.Title>
-            <Tournament />
+            <Tournament tournamentsByMonth={tournamentsByMonth} />
           </Styled.Content>
         </ScrollView>
       </SafeAreaView>
