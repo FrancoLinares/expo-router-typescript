@@ -6,8 +6,8 @@ import ServingImg from '../../assets/images/serving.png'
 import { Avatar, Text } from '@ui-kitten/components'
 import { Match } from 'src/types/match'
 import { CircuitMap } from 'src/types/circuit'
-import { isMatch } from 'src/components/Home/utils'
 import { CardStyled, ListStyled } from './styled'
+import { isMatch } from './utils'
 
 const A1_LOGO = Platform.OS === 'web' ? A1Logo : Image.resolveAssetSource(A1Logo).uri
 const PREMIER_LOGO = Platform.OS === 'web' ? PremierLogo : Image.resolveAssetSource(PremierLogo).uri

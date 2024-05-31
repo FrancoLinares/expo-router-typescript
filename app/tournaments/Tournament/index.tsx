@@ -6,8 +6,8 @@ import { Avatar, Text } from '@ui-kitten/components'
 import { FlatList, View } from 'react-native'
 import { TournamentByMonth, Tournament as TournamentType } from 'src/types/tournament'
 import { isTournamentFinished } from './utils'
-import { circuitsLogos } from 'src/components/Home/helpers'
 import { FROM, TO } from './constants'
+import { circuitsLogos } from 'src/components/Matches/helpers'
 
 type Props = {
   tournamentsByMonth: TournamentByMonth

@@ -1,28 +1,28 @@
 import { Divider, List } from '@ui-kitten/components'
 import React from 'react'
+import { CardStyled } from './styled'
 import { View } from 'react-native'
 import { CircuitMap } from 'src/types/circuit'
 import { MatchesMap } from 'src/types/match'
 import { Header, renderItem } from './helpers'
-import { HOME_NO_MATCHES, HOME_UNFINISHED_TITLE } from './constants'
-import { CardStyled } from './styled'
+import { MATCHES_FINISHED_TITLE, MATCHES_NO_MATCHES } from './constants'
 import { Styled } from '../styled'
 
 type Props = {
-  isPendingMatches: boolean
-  matches: MatchesMap
+  isPendingMatchesHistory: boolean
+  matchesHistory: MatchesMap
   circuitsMap: CircuitMap | undefined
 }
 
-function CurrentMatches({ isPendingMatches, matches, circuitsMap }: Props) {
+const HistoryMatches = ({ isPendingMatchesHistory, matchesHistory, circuitsMap }: Props) => {
   return (
     <View>
       <Styled.Title testID="home-screen-title" category="h2">
-        {HOME_UNFINISHED_TITLE}
+        {MATCHES_FINISHED_TITLE}
       </Styled.Title>
-      {!isPendingMatches &&
-        matches &&
-        Object.entries(matches).map(([circuitId, match]) => (
+      {!isPendingMatchesHistory &&
+        matchesHistory &&
+        Object.entries(matchesHistory).map(([circuitId, match]) => (
           <CardStyled.Container key={circuitId}>
             <CardStyled.Box status="primary" header={Header(circuitId, circuitsMap)}>
               <List
@@ -35,9 +35,9 @@ function CurrentMatches({ isPendingMatches, matches, circuitsMap }: Props) {
             </CardStyled.Box>
           </CardStyled.Container>
         ))}
-      {!Object.keys(matches || {})?.length && <Styled.Text category="s1">{HOME_NO_MATCHES}</Styled.Text>}
+      {!Object.keys(matchesHistory || {})?.length && <Styled.Text category="s1">{MATCHES_NO_MATCHES}</Styled.Text>}
     </View>
   )
 }
 
-export default CurrentMatches
+export default HistoryMatches
